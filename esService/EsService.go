@@ -53,7 +53,7 @@ func QueryAll(client *elastic.Client, data interface{}, queryNum int, indexDB st
 }
 
 //根据时间范围查询数据
-func QueryRange(client *elastic.Client, data *interface{}, queryNum int,
+func QueryRange(client *elastic.Client, data interface{}, queryNum int,
 	indexDB string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
 	var res *elastic.SearchResult
 	var err error
@@ -72,7 +72,7 @@ func QueryRange(client *elastic.Client, data *interface{}, queryNum int,
 
 //查询单条数据
 
-func QueryOne(client *elastic.Client, data *interface{}, indexDB string, key string, value string) interface{} {
+func QueryOne(client *elastic.Client, data interface{}, indexDB string, key string, value string) interface{} {
 	var res *elastic.SearchResult
 	var err error
 
@@ -89,7 +89,7 @@ func QueryOne(client *elastic.Client, data *interface{}, indexDB string, key str
 }
 
 //根据时间范围查询数据 TODO
-func QueryLog(client *elastic.Client, data *interface{}, queryNum int,
+func QueryLog(client *elastic.Client, data interface{}, queryNum int,
 	indexDB string, key string, value string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
 	var res *elastic.SearchResult
 	var err error
