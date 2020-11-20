@@ -72,13 +72,13 @@ func QueryRange(client *elastic.Client, data interface{}, queryNum int,
 
 //查询单条数据
 
-func QueryOne(client *elastic.Client, data interface{}, indexDB string,esType string, key string, value string) interface{} {
+func QueryOne(client *elastic.Client, data interface{}, indexDB string,esType string, key string, value string,size int) interface{} {
 	var res *elastic.SearchResult
 	var err error
 
 	boolSearch := elastic.NewBoolQuery().
 		Filter(elastic.NewTermsQuery(key, value))
-	res, err = client.Search(indexDB).Type(esType).Query(boolSearch).Size(1).
+	res, err = client.Search(indexDB).Type(esType).Query(boolSearch).Size(size).
 		Do(context.Background())
 
 	if err != nil {
