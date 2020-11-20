@@ -15,11 +15,11 @@ type RangeTime struct {
 }
 
 //存储
-func Save(client *elastic.Client, data interface{}, indexDB string, id int64) {
+func Save(client *elastic.Client, data interface{}, indexDB string,esType string, id int64) {
 	//使用结构体
 	_, err := client.Index().
 		Index(indexDB).
-		Type("employee").
+		Type(esType).
 		Id(strconv.FormatInt(id, 10)).
 		BodyJson(data).
 		Do(context.Background())
@@ -29,10 +29,10 @@ func Save(client *elastic.Client, data interface{}, indexDB string, id int64) {
 }
 
 //删除
-func Remove(client *elastic.Client, indexDB string, id string) {
+func Remove(client *elastic.Client, indexDB string,esType string, id string) {
 	res, err := client.Delete().Index(indexDB).
 		Id(id).
-		Type("employee").
+		Type(esType).
 		Do(context.Background())
 	if err != nil {
 		println(err.Error())
@@ -42,10 +42,10 @@ func Remove(client *elastic.Client, indexDB string, id string) {
 }
 
 //查询所有数据
-func QueryAll(client *elastic.Client, data interface{}, queryNum int, indexDB string) []interface{} {
+func QueryAll(client *elastic.Client, data interface{}, queryNum int, indexDB string,esType string) []interface{} {
 	var res *elastic.SearchResult
 	var err error
-	res, err = client.Search(indexDB).Type("employee").Size(queryNum).Do(context.Background())
+	res, err = client.Search(indexDB).Type(esType).Size(queryNum).Do(context.Background())
 	if err != nil {
 		println(err.Error())
 	}
@@ -54,13 +54,13 @@ func QueryAll(client *elastic.Client, data interface{}, queryNum int, indexDB st
 
 //根据时间范围查询数据
 func QueryRange(client *elastic.Client, data interface{}, queryNum int,
-	indexDB string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
+	indexDB string,esType string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
 	var res *elastic.SearchResult
 	var err error
 
 	boolSearch := elastic.NewBoolQuery().
 		Filter(elastic.NewRangeQuery(rangeTimeKey).Gte(rangeTimeValue.MinTime).Lte(rangeTimeValue.MaxTime))
-	res, err = client.Search(indexDB).Type("employee").Query(boolSearch).Size(queryNum).
+	res, err = client.Search(indexDB).Type(esType).Query(boolSearch).Size(queryNum).
 		Do(context.Background())
 
 	if err != nil {
@@ -72,13 +72,13 @@ func QueryRange(client *elastic.Client, data interface{}, queryNum int,
 
 //查询单条数据
 
-func QueryOne(client *elastic.Client, data interface{}, indexDB string, key string, value string) interface{} {
+func QueryOne(client *elastic.Client, data interface{}, indexDB string,esType string, key string, value string) interface{} {
 	var res *elastic.SearchResult
 	var err error
 
 	boolSearch := elastic.NewBoolQuery().
 		Filter(elastic.NewTermsQuery(key, value))
-	res, err = client.Search(indexDB).Type("employee").Query(boolSearch).Size(1).
+	res, err = client.Search(indexDB).Type(esType).Query(boolSearch).Size(1).
 		Do(context.Background())
 
 	if err != nil {
@@ -90,7 +90,7 @@ func QueryOne(client *elastic.Client, data interface{}, indexDB string, key stri
 
 //根据时间范围查询数据 TODO
 func QueryLog(client *elastic.Client, data interface{}, queryNum int,
-	indexDB string, kv map[string]string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
+	indexDB string,esType string, kv map[string]string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
 	var res *elastic.SearchResult
 	var err error
 
@@ -104,7 +104,7 @@ func QueryLog(client *elastic.Client, data interface{}, queryNum int,
 		}
 	}
 
-	res, err = client.Search(indexDB).Type("employee").Query(boolSearch).Size(queryNum).
+	res, err = client.Search(indexDB).Type(esType).Query(boolSearch).Size(queryNum).
 		Do(context.Background())
 
 	if err != nil {
@@ -116,7 +116,7 @@ func QueryLog(client *elastic.Client, data interface{}, queryNum int,
 
 //根据时间范围及服务名查询数据
 func QueryTimeLog(client *elastic.Client, data interface{}, queryNum int,
-	indexDB string,kv map[string]string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
+	indexDB string,esType string,kv map[string]string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
 	var res *elastic.SearchResult
 	var err error
 
@@ -129,7 +129,7 @@ func QueryTimeLog(client *elastic.Client, data interface{}, queryNum int,
 		}
 	}
 
-	res, err = client.Search(indexDB).Type("employee").Query(boolSearch).Size(queryNum).
+	res, err = client.Search(indexDB).Type(esType).Query(boolSearch).Size(queryNum).
 		Do(context.Background())
 
 	if err != nil {

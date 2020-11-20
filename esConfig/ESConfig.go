@@ -13,7 +13,8 @@ func NewEsClient(esData *EsData) *elastic.Client {
 	if esData == nil {
 		panic("esConfigData is null")
 	}
-	errorlog := log.New(os.Stdout, "APP", log.LstdFlags)
+
+	errorlog := log.New(os.Stdout, "", log.LstdFlags)
 	client, err := elastic.NewClient(elastic.SetErrorLog(errorlog),
 		elastic.SetURL(esData.Host),
 		elastic.SetBasicAuth(esData.UserName, esData.PassWord))
