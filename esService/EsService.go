@@ -15,7 +15,7 @@ type RangeTime struct {
 }
 
 //存储
-func save(client *elastic.Client, data interface{}, indexDB string, id int64) {
+func Save(client *elastic.Client, data interface{}, indexDB string, id int64) {
 	//使用结构体
 	_, err := client.Index().
 		Index(indexDB).
@@ -29,7 +29,7 @@ func save(client *elastic.Client, data interface{}, indexDB string, id int64) {
 }
 
 //删除
-func remove(client *elastic.Client, indexDB string, id string) {
+func Remove(client *elastic.Client, indexDB string, id string) {
 	res, err := client.Delete().Index(indexDB).
 		Id(id).
 		Type("employee").
