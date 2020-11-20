@@ -30,3 +30,12 @@ func GetDataOne(res *elastic.SearchResult, err error, dataType interface{}) inte
 	}
 	return dataType
 }
+
+//append query condition
+func AppendCondition(kv map[string]string)[]*elastic.TermsQuery  {
+	termsQuery := make([]*elastic.TermsQuery,0)
+	for k, v := range kv {
+		termsQuery = append(termsQuery,elastic.NewTermsQuery(k, v))
+	}
+	return termsQuery
+}

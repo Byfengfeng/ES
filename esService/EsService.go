@@ -90,13 +90,45 @@ func QueryOne(client *elastic.Client, data interface{}, indexDB string, key stri
 
 //根据时间范围查询数据 TODO
 func QueryLog(client *elastic.Client, data interface{}, queryNum int,
-	indexDB string, key string, value string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
+	indexDB string, kv map[string]string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
 	var res *elastic.SearchResult
 	var err error
 
 	boolSearch := elastic.NewBoolQuery().
-		Filter(elastic.NewTermsQuery(key, value)).
 		Filter(elastic.NewRangeQuery(rangeTimeKey).Gte(rangeTimeValue.MinTime).Lte(rangeTimeValue.MaxTime))
+
+	if len(kv) > 0{
+		condition := esUtils.AppendCondition(kv)
+		for _,v := range condition {
+			boolSearch.Filter(v)
+		}
+	}
+
+	res, err = client.Search(indexDB).Type("employee").Query(boolSearch).Size(queryNum).
+		Do(context.Background())
+
+	if err != nil {
+		println(err.Error())
+	}
+
+	return esUtils.GetDataList(res, err, data)
+}
+
+//根据时间范围及服务名查询数据
+func QueryTimeLog(client *elastic.Client, data interface{}, queryNum int,
+	indexDB string,kv map[string]string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
+	var res *elastic.SearchResult
+	var err error
+
+	boolSearch := elastic.NewBoolQuery().
+		Filter(elastic.NewRangeQuery(rangeTimeKey).Gte(rangeTimeValue.MinTime).Lte(rangeTimeValue.MaxTime))
+	if len(kv) > 0{
+		condition := esUtils.AppendCondition(kv)
+		for _,v := range condition {
+			boolSearch.Filter(v)
+		}
+	}
+
 	res, err = client.Search(indexDB).Type("employee").Query(boolSearch).Size(queryNum).
 		Do(context.Background())
 
