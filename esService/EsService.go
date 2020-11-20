@@ -88,6 +88,23 @@ func QueryOne(client *elastic.Client, data interface{}, indexDB string,esType st
 	return esUtils.GetDataOne(res, err, data)
 }
 
+//根据索引查询相匹配的数据条
+func QueryOneList(client *elastic.Client, data interface{}, indexDB string,esType string, key string, value string,size int) []interface{} {
+	var res *elastic.SearchResult
+	var err error
+
+	boolSearch := elastic.NewBoolQuery().
+		Filter(elastic.NewTermsQuery(key, value))
+	res, err = client.Search(indexDB).Type(esType).Query(boolSearch).Size(size).
+		Do(context.Background())
+
+	if err != nil {
+		println(err.Error())
+	}
+
+	return esUtils.GetDataList(res, err, data)
+}
+
 //根据时间范围查询数据 TODO
 func QueryLog(client *elastic.Client, data interface{}, queryNum int,
 	indexDB string,esType string, kv map[string]string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
