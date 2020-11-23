@@ -136,7 +136,6 @@ func QueryTimeLog(client *elastic.Client, data interface{}, queryNum int,
 	indexDB string,esType string,kv map[string]string, rangeTimeKey string, rangeTimeValue *RangeTime) []interface{} {
 	var res *elastic.SearchResult
 	var err error
-
 	boolSearch := elastic.NewBoolQuery().
 		Filter(elastic.NewRangeQuery(rangeTimeKey).Gte(rangeTimeValue.MinTime).Lte(rangeTimeValue.MaxTime))
 	if len(kv) > 0{
@@ -154,4 +153,13 @@ func QueryTimeLog(client *elastic.Client, data interface{}, queryNum int,
 	}
 
 	return esUtils.GetDataList(res, err, data)
+}
+
+//查询es上面所有索引库
+func GetIndexNames(client *elastic.Client)[]string  {
+	names, err := client.IndexNames()
+	if err != nil {
+		println(err.Error())
+	}
+	return names
 }
