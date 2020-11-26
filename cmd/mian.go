@@ -1,15 +1,17 @@
 package main
 
 import (
-	"fmt"
 	EsConfig "github.com/Byfengfeng/es/esConfig"
 	"github.com/Byfengfeng/es/esService"
+	"sync"
+	"sync/atomic"
+	"time"
 )
 
 func main() {
 	data := EsConfig.EsData{
-		"http://127.0.0.1:9200/",
-		"user",
+		"http://122.228.10.99:9200/",
+		"esuser",
 		"123456",
 		"log",
 	}
@@ -21,11 +23,26 @@ func main() {
 	//queryAll := esService.QueryTimeLog(esClient, Log{}, 15, data.IndexDBName,"log",ke,"time",&rangeTime)
 	//for i := range queryAll {
 	//	fmt.Println(queryAll[i])
-	//}
-	indexNames := esService.GetIndexNames(esClient)
-	for _,indexName := range indexNames {
-		fmt.Println(indexName)
+	//}indexDB string,esType string, id int64
+	per := struct{name string}{name: "123"}
+	wg := sync.WaitGroup{}
+	count := 3000
+	wg.Add(count)
+	var i int64 = 0
+	for i < 3000 {
+		//go func() {
+			esService.Save(esClient,per,"1","1",i)
+		//	wg.Done()
+		//}()
+		atomic.AddInt64(&i,1)
 	}
+	wg.Wait()
+	time.Sleep(time.Second*20)
+	//indexNames := esService.GetIndexNames(esClient)
+	//for _,indexName := range indexNames {
+	//	fmt.Println(indexName)
+	//}
+	//fmt.Println(zap.DebugLevel)
 }
 
 type ByTime []Log
