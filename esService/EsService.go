@@ -1,18 +1,18 @@
 package esService
 
 import (
+	"context"
 	"fmt"
 	"github.com/Byfengfeng/es/esUtils"
-	"strconv"
-
-	"context"
 	"github.com/olivere/elastic/v7"
+	"strconv"
 )
 
 type RangeTime struct {
 	MinTime int64
 	MaxTime int64
 }
+
 
 //存储
 func Save(client *elastic.Client, data interface{}, indexDB string,esType string, id int64) {
@@ -24,7 +24,7 @@ func Save(client *elastic.Client, data interface{}, indexDB string,esType string
 		BodyJson(data).
 		Do(context.Background())
 	if err != nil {
-		panic(err)
+		Save(client,data,indexDB,esType,id)
 	}
 }
 
