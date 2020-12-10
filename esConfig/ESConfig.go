@@ -1,37 +1,32 @@
 package EsConfig
 
 import (
-	"context"
 	"fmt"
+	"github.com/olivere/elastic/v7"
 	"log"
 	"os"
-
-	"github.com/olivere/elastic/v7"
 )
 
-func NewEsClient(esData *EsData) *elastic.Client {
+func NewEsClient(esData *EsData,startLog bool) *elastic.Client {
 	if esData == nil {
 		panic("esConfigData is null")
 	}
-
-	errorlog := log.New(os.Stdout, "", log.LstdFlags)
-	client, err := elastic.NewClient(elastic.SetErrorLog(errorlog),
-		elastic.SetURL(esData.Host),
-		elastic.SetBasicAuth(esData.UserName, esData.PassWord))
-	if err != nil {
-		panic(err)
+	var client *elastic.Client
+	var err error
+	if startLog {
+		errorlog := log.New(os.Stdout, "", log.LstdFlags)
+		client, err = elastic.NewClient(
+			elastic.SetErrorLog(errorlog),
+			elastic.SetURL(esData.Host),
+			elastic.SetBasicAuth(esData.UserName, esData.PassWord))
+	}else{
+		client, err = elastic.NewClient(
+			elastic.SetURL(esData.Host),
+			elastic.SetBasicAuth(esData.UserName, esData.PassWord))
 	}
-	info, code, err := client.Ping(esData.Host).Do(context.Background())
 	if err != nil {
-		panic(err)
+		fmt.Println("es连接异常",err)
 	}
-	fmt.Printf("Elasticsearch returned with code %d and version %s\n", code, info.Version.Number)
-
-	esversion, err := client.ElasticsearchVersion(esData.Host)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("Elasticsearch version %s\n", esversion)
 	return client
 }
 

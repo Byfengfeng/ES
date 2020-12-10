@@ -28,6 +28,28 @@ func Save(client *elastic.Client, data interface{}, indexDB string,esType string
 	}
 }
 
+//存储多个
+func SaveAll(client *elastic.Client, indexDB string,esType string, id int64,datas ...interface{},) {
+	bulk := client.Bulk()
+	if len(datas) > 0{
+		for _,v := range datas {
+			 data := elastic.NewBulkIndexRequest().
+				Index(indexDB).
+				Type(esType).
+				Id(strconv.FormatInt(id, 10)).
+				Doc(v)
+			bulk.Add(data)
+		}
+		_, err := bulk.Do(context.Background())
+		if err != nil {
+			SaveAll(client,indexDB,esType,id,datas)
+		}
+	}
+
+}
+
+
+
 //删除
 func Remove(client *elastic.Client, indexDB string,esType string, id string) {
 	res, err := client.Delete().Index(indexDB).

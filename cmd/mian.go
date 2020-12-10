@@ -1,22 +1,55 @@
 package main
 
 import (
+	"fmt"
 	EsConfig "github.com/Byfengfeng/es/esConfig"
-	"github.com/Byfengfeng/es/esService"
-	"sync"
-	"sync/atomic"
-	"time"
+	//"sync"
 )
 
+//var luck sync.Mutex
+var n = 0
 func main() {
 	data := EsConfig.EsData{
-		"http://122.228.10.99:9200/",
+		"http://127.0.0.1:9200/",
 		"esuser",
 		"123456",
-		"log",
+		"s",
 	}
+	fmt.Println(data)
 	//rangeTime := esService.RangeTime{1605593790, 1605593797}
-	esClient := EsConfig.NewEsClient(&data)
+	//esClient := EsConfig.NewEsClient(&data)
+	//bulk := esClient.Bulk()
+	//aulk := esClient.Bulk()
+	//for i:=0; i<= 20000;i++ {
+	//	per := struct{name string}{name: "123"}
+	//	req := elastic.NewBulkIndexRequest().
+	//		Index("1").
+	//		Type("1").
+	//		Id(strconv.FormatInt(esUtils.GetId(), 10)).
+	//		Doc(per)
+	//	if n > 0{
+	//		aulk.Add(req)
+	//	}
+
+		//luck.Lock()
+		//n = 1
+		//bulk.Add(req)
+		//if bulk.NumberOfActions() == 1000 {
+		//	bulk.Do(context.Background())
+		//}
+		//if aulk.NumberOfActions() > 0{
+		//	aulk.Do(context.Background())
+		//}
+		//n = 0
+		//luck.Unlock()
+	//}
+
+	//bulk.Do(context.Background())
+	//bulk.Reset()
+	//fmt.Println(bulk)
+	//request := elastic.BulkableRequest()
+
+
 	//ke := make(map[string]string,0)
 	//ke["tid"] = "1"
 	//ke["uid"] = "456"
@@ -24,20 +57,22 @@ func main() {
 	//for i := range queryAll {
 	//	fmt.Println(queryAll[i])
 	//}indexDB string,esType string, id int64
-	per := struct{name string}{name: "123"}
-	wg := sync.WaitGroup{}
-	count := 3000
-	wg.Add(count)
-	var i int64 = 0
-	for i < 3000 {
-		//go func() {
-			esService.Save(esClient,per,"1","1",i)
-		//	wg.Done()
-		//}()
-		atomic.AddInt64(&i,1)
-	}
-	wg.Wait()
-	time.Sleep(time.Second*20)
+	//per := struct{name string}{name: "123"}
+	//wg := sync.WaitGroup{}
+	//count := 10000
+	//wg.Add(count)
+	////startTime := time.Now().UnixNano() / 1e6
+	//for i:=0; i < count; i++{
+	//	go func() {
+	//		esService.Save(esClient,per,"1","1",esUtils.GetId())
+	//		wg.Done()
+	//	}()
+	//}
+	//wg.Wait()
+	//fmt.Println("sleep")
+	//fmt.Println(time.Now().UnixNano() / 1e6 - startTime)
+	//time.Sleep(time.Second*20000)
+	//fmt.Println(esService.Num)
 	//indexNames := esService.GetIndexNames(esClient)
 	//for _,indexName := range indexNames {
 	//	fmt.Println(indexName)
@@ -61,4 +96,8 @@ type Log struct {
 	Age        int8   `json:"age"`
 	Uid        int64  `json:"uid"`
 	Tid        int64
+}
+
+func bules()  {
+
 }
