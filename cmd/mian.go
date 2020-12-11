@@ -17,7 +17,7 @@ func main() {
 	}
 	fmt.Println(data)
 	//rangeTime := esService.RangeTime{1605593790, 1605593797}
-	//esClient := EsConfig.NewEsClient(&data)
+	//esClient := EsConfig.NewEsClient(&data,true)
 	//bulk := esClient.Bulk()
 	//aulk := esClient.Bulk()
 	//for i:=0; i<= 20000;i++ {
@@ -57,18 +57,26 @@ func main() {
 	//for i := range queryAll {
 	//	fmt.Println(queryAll[i])
 	//}indexDB string,esType string, id int64
-	//per := struct{name string}{name: "123"}
 	//wg := sync.WaitGroup{}
+	//var list map[string]string
 	//count := 10000
 	//wg.Add(count)
+	//lock := sync.Mutex{}
 	////startTime := time.Now().UnixNano() / 1e6
 	//for i:=0; i < count; i++{
 	//	go func() {
-	//		esService.Save(esClient,per,"1","1",esUtils.GetId())
+	//		lock.Lock()
+	//		a := Ads{
+	//			name: fmt.Sprint(esUtils.GetId()),
+	//		}
+	//		marshal, _ := json.Marshal(a)
+	//		list[a.name] = string(marshal)
+	//		lock.Unlock()
 	//		wg.Done()
 	//	}()
 	//}
 	//wg.Wait()
+	//esService.SaveAll(esClient,"1","1",esUtils.GetId(),&list)
 	//fmt.Println("sleep")
 	//fmt.Println(time.Now().UnixNano() / 1e6 - startTime)
 	//time.Sleep(time.Second*20000)
@@ -78,6 +86,10 @@ func main() {
 	//	fmt.Println(indexName)
 	//}
 	//fmt.Println(zap.DebugLevel)
+}
+
+type Ads struct{
+	name string
 }
 
 type ByTime []Log
