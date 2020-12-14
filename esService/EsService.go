@@ -38,10 +38,17 @@ func SaveAll(client *elastic.Client, indexDB string,esType string,datas ...inter
 				Type(esType).
 				Doc(v)
 			bulk.Add(data)
+			if bulk.NumberOfActions() > 100000 {
+				_, err := bulk.Do(context.Background())
+				if err != nil {
+					fmt.Println(err)
+					SaveAll(client,indexDB,esType,datas...)
+				}
+			}
 		}
 		_, err := bulk.Do(context.Background())
 		if err != nil {
-			SaveAll(client,indexDB,esType,datas)
+			SaveAll(client,indexDB,esType,datas...)
 		}
 	}
 }
