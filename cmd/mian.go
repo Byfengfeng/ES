@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	EsConfig "github.com/Byfengfeng/es/esConfig"
+	EsConfig "github.com/Byfengfeng/es/es_config"
 	//"sync"
 )
 
@@ -11,13 +11,16 @@ var n = 0
 func main() {
 	data := EsConfig.EsData{
 		"http://127.0.0.1:9200/",
-		"esuser",
-		"123456",
+		"esuser12",
+		"123456111",
 		"s",
+		"1233",
 	}
 	fmt.Println(data)
-	//rangeTime := esService.RangeTime{1605593790, 1605593797}
-	//esClient := EsConfig.NewEsClient(&data,true)
+	per := struct{name string}{name: "123"}
+	//rangeTime := es_service.RangeTime{1605593790, 1605593797}
+	esClient := EsConfig.NewEsClient(&data,true)
+	esClient.SaveAll(&per)
 	//bulk := esClient.Bulk()
 	//aulk := esClient.Bulk()
 	//for i:=0; i<= 20000;i++ {
@@ -25,7 +28,7 @@ func main() {
 	//	req := elastic.NewBulkIndexRequest().
 	//		Index("1").
 	//		Type("1").
-	//		Id(strconv.FormatInt(esUtils.GetId(), 10)).
+	//		Id(strconv.FormatInt(utils.GetId(), 10)).
 	//		Doc(per)
 	//	if n > 0{
 	//		aulk.Add(req)
@@ -53,7 +56,7 @@ func main() {
 	//ke := make(map[string]string,0)
 	//ke["tid"] = "1"
 	//ke["uid"] = "456"
-	//queryAll := esService.QueryTimeLog(esClient, Log{}, 15, data.IndexDBName,"log",ke,"time",&rangeTime)
+	//queryAll := es_service.QueryTimeLog(esClient, Log{}, 15, data.IndexDBName,"log",ke,"time",&rangeTime)
 	//for i := range queryAll {
 	//	fmt.Println(queryAll[i])
 	//}indexDB string,esType string, id int64
@@ -67,7 +70,7 @@ func main() {
 	//	go func() {
 	//		lock.Lock()
 	//		a := Ads{
-	//			name: fmt.Sprint(esUtils.GetId()),
+	//			name: fmt.Sprint(utils.GetId()),
 	//		}
 	//		marshal, _ := json.Marshal(a)
 	//		list[a.name] = string(marshal)
@@ -76,12 +79,12 @@ func main() {
 	//	}()
 	//}
 	//wg.Wait()
-	//esService.SaveAll(esClient,"1","1",esUtils.GetId(),&list)
+	//es_service.SaveAll(esClient,"1","1",utils.GetId(),&list)
 	//fmt.Println("sleep")
 	//fmt.Println(time.Now().UnixNano() / 1e6 - startTime)
 	//time.Sleep(time.Second*20000)
-	//fmt.Println(esService.Num)
-	//indexNames := esService.GetIndexNames(esClient)
+	//fmt.Println(es_service.Num)
+	//indexNames := es_service.GetIndexNames(esClient)
 	//for _,indexName := range indexNames {
 	//	fmt.Println(indexName)
 	//}

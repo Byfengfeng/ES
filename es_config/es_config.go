@@ -1,33 +1,36 @@
-package EsConfig
+package es_config
 
 import (
 	"fmt"
+	"github.com/Byfengfeng/es/es_service"
 	"github.com/olivere/elastic/v7"
 	"log"
 	"os"
 )
 
-func NewEsClient(esData *EsData,startLog bool) *elastic.Client {
+func NewEsClient(esData *EsData,startLog bool) (esService es_service.EsService) {
 	if esData == nil {
 		panic("esConfigData is null")
 	}
-	var client *elastic.Client
 	var err error
 	if startLog {
 		errorlog := log.New(os.Stdout, "", log.LstdFlags)
-		client, err = elastic.NewClient(
+		esService.Client, err = elastic.NewClient(
 			elastic.SetErrorLog(errorlog),
 			elastic.SetURL(esData.Host),
 			elastic.SetBasicAuth(esData.UserName, esData.PassWord))
 	}else{
-		client, err = elastic.NewClient(
+		esService.Client, err = elastic.NewClient(
 			elastic.SetURL(esData.Host),
 			elastic.SetBasicAuth(esData.UserName, esData.PassWord))
 	}
+	esService.Index = esData.IndexDBName
+	esService.EsType = esData.EsType
 	if err != nil {
 		fmt.Println("es连接异常",err)
 	}
-	return client
+
+	return
 }
 
 type EsInterface interface {
@@ -39,4 +42,5 @@ type EsData struct {
 	UserName    string `json:"user_name"`
 	PassWord    string `json:"pass_word"`
 	IndexDBName string `mapstructure:"index-db-name"`
+	EsType		string `json:"es_type"`
 }
